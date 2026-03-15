@@ -1,1 +1,426 @@
 
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <title>Hartwick Pines State Park</title>
+
+        <script>
+        var esriConfig = {
+            apiKey: "AAPTazd5GA-tN5wLSQufBCgPMUg..fqn88jIBxXHWkErzBslNFpNOi2sKDJsiPaz3OfDrZCrAgWtT44mHv9ZaP5VVGqSP0Pty3_-_SaUSCZrcTwLtG9B0h4nYt9eBbyEJNCZCwLy2E9RptcKQtzFbgFk7VFiqqvZvDZMBjxOMwapKmervyGV5l9pe0Noh3clnyF4iXDRAlqIMtIGaUx47eX-8cwIoOn4AVZeE_Zz22jAe06p57MqgAdwcLhvJYkxRibkc51yLFQrkqhWTaRttPuCH-0O2TCiqDQ..AT1_n54nPcAP",
+        };
+        </script>
+
+        <script type="module" src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js"></script>
+
+
+        <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/dark/main.css" />
+        <script src="https://js.arcgis.com/4.34/"></script>
+
+        <script type="module" src="https://js.arcgis.com/4.34/map-components/"></script>
+
+        <!--styling the page-->
+        <style>
+            html,
+            body,
+            #viewDiv {
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+            }
+            #information {
+                width: 300px;
+                background: #fff;
+                padding: 20px;
+            }
+            #optionsDiv {
+                background-color: #C1A789; 
+                color: black;
+                padding: 10px;
+                width: 300px;
+                opacity: 80%;
+            }
+
+            .esri-popup .esri-popup-header .esri-title {
+                font-size: 18px;
+                font-weight: bolder;
+            }
+
+            .esri-popup .esri-popup-body .esri-popup-content {
+                font-size: 14px;
+            }
+
+        </style>
+
+
+
+        <arcgis-map basemap= "satellite" center = "-84.67554701694672, 44.749945182717525" zoom= "14">
+            <arcgis-expand slot="top-left" expand-icon="information" autoCollapse= true mode=" floating" collapse-tooltip>
+                <div id="information">
+                    <b>Information</b> <br />
+                    <div id="description">Hartwick Pines is located in Grayling, Michigan. It is one of 33 MI state parks to offer track chairs for improved accessibility. This app explores the additional accessibility features at Hartwick Pines. For more information and to reserve a track chair, please visit <a href="https://www.michigan.gov/recsearch/parks/hartwick" target="_top">Hartwick Pines State Park</a>.  </div>
+                    <div id="outer-container">
+                    </div>
+                </div>
+            </arcgis-expand>
+            <arcgis-expand
+                slot="top-left"
+                mode="floating"
+            >
+                <arcgis-search
+                all-placeholder= "Accessible Features"
+                include-default-sources-disabled></arcgis-search>
+            </arcgis-expand>
+            <arcgis-zoom slot="top-left"></arcgis-zoom>
+            <arcgis-locate slot= "top-left"></arcgis-locate>
+            <arcgis-expand
+                slot="top-right" 
+                mode="floating"
+            >
+                <arcgis-legend></arcgis-legend>
+            </arcgis-expand>
+            <arcgis-expand
+                slot="bottom-right" 
+                mode="floating"
+            >
+                <arcgis-editor></arcgis-editor>
+            </arcgis-expand>
+            <arcgis-expand
+                slot= "top-right"
+                mode= "floating"
+            >
+                <arcgis-layer-list></arcgis-layer-list>
+            </arcgis-expand>
+
+        </arcgis-map>
+
+    </head>
+
+    <body>
+        <script type="module">
+
+            const[FeatureLayer, PictureMarkerSymbol, Map, GraphicsLayer, query, Query, MapView]= 
+                await $arcgis.import([
+                    "@arcgis/core/layers/FeatureLayer.js",
+                    "@arcgis/core/symbols/PictureMarkerSymbol.js", 
+                    "@arcgis/core/Map.js",
+                    "@arcgis/core/layers/GraphicsLayer.js",
+                    "@arcgis/core/rest/query.js",
+                    "@arcgis/core/rest/support/Query.js",
+                    "@arcgis/core/views/MapView.js"
+            ]);
+
+            const viewElement = document.querySelector("arcgis-map");
+            await viewElement.viewOnReady();
+
+
+            const accessibilityNote = new FeatureLayer({
+                url:"https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Accessibility_Note/FeatureServer",
+                title: "Accessibility Note",
+                popupTemplate:{
+                    title:"Accessibility Note",  
+                    content: "<b>Date Added:</b> {Date}"+ "<br><b>Note:</b> {Note}", 
+                    overwriteActions: true
+                }
+
+
+            })
+
+            viewElement.map.add(accessibilityNote); 
+
+            // Define a simple renderer and symbol
+            const trailheadsRenderer = {
+                type: "simple",
+                symbol: {
+                type: "picture-marker",
+                url: "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+                width: "18px",
+                height: "18px",
+                },
+            };
+
+            // Define a label for the trailheads
+            const trailheadsLabels = {
+                symbol: {
+                type: "text",
+                color: "#FFFFFF",
+                haloColor: "#5E8D74",
+                haloSize: "2px",
+                font: {
+                    size: "12px",
+                    family: "Noto Sans",
+                    style: "italic",
+                    weight: "normal",
+                },
+                },
+
+                labelPlacement: "above-center",
+                labelExpressionInfo: {
+                expression: "$feature.label",
+                },
+            };
+
+            // Create the layer and set the renderer
+            const trailheads = new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Hartwick_TrailsInfo/FeatureServer",
+                renderer: trailheadsRenderer,
+                labelingInfo: [trailheadsLabels],
+                title: "Trail Information",
+                popupTemplate:{
+                    title:"{Label}",  
+                    content: "<b>Accessible:</b> {Accessible}"+ "<br><b>Length:</b> {Trail_Length_mi} miles", 
+                    overwriteActions: true
+                }
+            });
+
+            viewElement.map.add(trailheads, 1);
+
+
+            // Define a unique value renderer and symbols
+            const activitiesRenderer = {
+                type: "unique-value",
+                field: "Label",
+                
+                uniqueValueInfos: [{
+                    value: "Campground",
+                    symbol: {
+                    type: "picture-marker",
+                    url: "https://cdn.arcgis.com/sharing/rest/content/items/36359a4a8f3143b6bf44d5688e007900/resources/styles/thumbnails/Campground.png",
+                    width: "50px",
+                    height: "50px"
+                    },
+                },
+                {
+                    value: "Access Site and Fishing Pier",
+                    symbol: {
+                    type: "picture-marker",
+                    url: "https://cdn.arcgis.com/sharing/rest/content/items/36359a4a8f3143b6bf44d5688e007900/resources/styles/thumbnails/Fishing%20Pier.png",
+                    width: "50px",
+                    height: "50px"
+                    },
+                }, 
+                {
+                    value: "Rustic Cabin",
+                    symbol: {
+                    type: "picture-marker",
+                    url: "https://cdn.arcgis.com/sharing/rest/content/items/36359a4a8f3143b6bf44d5688e007900/resources/styles/thumbnails/Cabin.png",
+                    width: "50px",
+                    height: "50px"
+                    },
+                }, 
+                {
+                    value: " Group Campground",
+                    symbol: {
+                    type: "picture-marker",
+                    url: "https://cdn.arcgis.com/sharing/rest/content/items/36359a4a8f3143b6bf44d5688e007900/resources/styles/thumbnails/Campground.png",
+                    width: "50px",
+                    height: "50px"
+                    },
+                },
+                {
+                    value: "Picnic Shelter",
+                    symbol: {
+                    type: "picture-marker",
+                    url: "https://cdn.arcgis.com/sharing/rest/content/items/36359a4a8f3143b6bf44d5688e007900/resources/styles/thumbnails/Picnic%20shelter.png",
+                    width: "50px",
+                    height: "50px"
+                    },
+                },
+                {
+                    value: "Parking",
+                    symbol: {
+                    type: "picture-marker",
+                    url: "https://cdn.arcgis.com/sharing/rest/content/items/36359a4a8f3143b6bf44d5688e007900/resources/styles/thumbnails/Parking%20lot.png",
+                    width: "50px",
+                    height: "50px"
+                    },
+                }
+                ]
+            };
+
+            // Create the layer and set the renderer
+            const activities = new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Hartwick_Amenities_Activities/FeatureServer",
+                renderer: activitiesRenderer,
+                title: "Park Amenities",
+                popupTemplate:{
+                    title:"{Label}",  
+                    content: "<b>Accessible:</b> {Accessible}", 
+                    overwriteActions: true, 
+                }
+            });
+
+            viewElement.map.add(activities, 1);
+
+            // Define a unique value renderer and symbols
+            const trailsRenderer = {
+                type: "unique-value",
+                field: "Accessible",
+                uniqueValueInfos: [{
+                    value: "Yes",
+                    symbol: {
+                    color: "#b5651d",
+                    type: "simple-line",
+                    style: "solid",
+                    width: "2px", 
+                    },
+                },
+                {
+                    value: "No",
+                    symbol: {
+                    color: "#b5651d",
+                    type: "simple-line",
+                    style: "short-dot",
+                    width: "2px", 
+                    },
+                }]
+            };
+
+            // Create the layer and set the renderer
+            const trails = new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Hartwick_trails/FeatureServer",
+                renderer: trailsRenderer,
+                title: "Trails",
+                popupTemplate:{
+                    title:"{Trail_Name}",  
+                    content: "<b>Accessible:</b> {Accessible}"+ "<br><b>Length:</b>{Miles} miles"+"<br><b>Bikes Allowed:</b> {Bike_Use}"+"<br><b>Cross Country Ski Allowed:</b> {XCountrySki_Use}"
+                    +"<br><b>Snow Shoe Allowed:</b> {SnowShoe_Use}"+"<br><b>Paved:</b> {Paved}", 
+                    overwriteActions: true
+                }
+            });
+
+            viewElement.map.add(trails, 0);
+
+
+
+            // Add roads
+            const roadsRenderer = {
+                type: "simple",
+                symbol: {
+                type: "simple-line",
+                style: "solid",
+                color: "#808080",
+                width: "1px",
+                },
+            };
+
+            const roads = new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_PublicRds/FeatureServer",
+                renderer: roadsRenderer,
+                title: "Roads",
+            });
+
+            viewElement.map.add(roads, 0);
+
+            //renderer for Park Buildings
+            const buildingRenderer = {
+                type: "simple",  // autocasts as new SimpleRenderer()
+                symbol: {
+                    type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
+                    color: [
+                            193,
+                            167,
+                            137,
+                            255
+                    ],
+                    outline: {  
+                    width: 1,
+                    color: "#523c21"
+                    }
+                }
+            };
+        
+            // Create park buildings
+            const buildings = new FeatureLayer({ 
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Hartwick_Buildings/FeatureServer", 
+                renderer: buildingRenderer,
+                title: "Park Buildings",
+                popupTemplate:{
+                    title:"{Label}",  
+                    content: "<b>Accessible:</b> {Accessible}",
+                    overwriteActions: true
+                }
+               
+            });
+            
+            //adds building layer to map
+            viewElement.map.add(buildings, 0); 
+
+            //renderer for Park Boundary
+            const parkRenderer = {
+                type: "simple",  // autocasts as new SimpleRenderer()
+                symbol: {
+                    type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
+                    // color: "purple",
+                    outline: {  
+                    width: 3,
+                    color: "black"
+                    }
+                }
+            };
+
+            // Create park boundary layer from feature service 
+            const parkLayer = new FeatureLayer({ 
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/HartwickPinesBoundary/FeatureServer", //URL to Hartwick Pines State Park layer
+                renderer: parkRenderer,
+                title: "Hartwick Pines State Park Boundary"
+               
+            });
+            
+            //adds park layer to map
+            viewElement.map.add(parkLayer, 0);
+
+            // Create graphics layer and symbol to use for displaying the results of query
+            const resultsLayer = new GraphicsLayer();
+
+            const params = new Query({
+                returnGeometry: true,
+                outFields: ["*"],
+            });
+
+            // creates search constant 
+            const search= document.querySelector("arcgis-search"); 
+            await search.componentOnReady();
+
+            search.sources= [
+                {
+                    layer: buildings, 
+                    searchFields: ["Label"], 
+                    displayField: "Label",
+                    exactMatch: false, 
+                    outFields: ["Label", "Accessible"], 
+                    name: "Park Buildings", 
+                    placeholder: "example: Visitor Center",
+                }, 
+                {
+                    layer: trails, 
+                    searchFields: ["Trail_Name"], 
+                    displayField: "Trail_Name",
+                    exactMatch: false, 
+                    outFields: ["Trail_Name", "Accessible"], 
+                    name: "Trails", 
+                    placeholder: "example: Weary Leg Trail",
+                },
+                {
+                    layer:activities, 
+                    searchFields: ["Label"], 
+                    displayField: "Label",
+                    exactMatch: false, 
+                    outFields: ["Label", "Accessible"], 
+                    name: "Amenities", 
+                    placeholder: "example: Campground",
+                }, 
+          
+
+            ];
+            
+
+        </script>
+    
+
+        
+
+       
+    </body>
+</html>
