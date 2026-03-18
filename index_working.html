@@ -1,3 +1,14 @@
+<!--
+
+To run this demo, you need to replace 'YOUR_ACCESS_TOKEN' with an access token from ArcGIS that has the correct privileges.
+
+To get started, sign up for a free ArcGIS Location Platform account or an ArcGIS Online account and create developer credentials.
+
+https://developers.arcgis.com/documentation/security-and-authentication/get-started/
+
+-->
+
+
 <html>
 
 <head>
@@ -14,7 +25,7 @@
   </style>
 
   <script>
-    var esriConfig = { apiKey: "YAAPTazd5GA-tN5wLSQufBCgPMUg..fqn88jIBxXHWkErzBslNFpNOi2sKDJsiPaz3OfDrZCrAgWtT44mHv9ZaP5VVGqSP0Pty3_-_SaUSCZrcTwLtG9B0h4nYt9eBbyEJNCZCwLy2E9RptcKQtzFbgFk7VFiqqvZvDZMBjxOMwapKmervyGV5l9pe0Noh3clnyF4iXDRAlqIMtIGaUx47eX-8cwIoOn4AVZeE_Zz22jAe06p57MqgAdwcLhvJYkxRibkc51yLFQrkqhWTaRttPuCH-0O2TCiqDQ..AT1_n54nPcAPOUR_ACCESS_TOKEN" };
+    var esriConfig = { apiKey: "YOUR_ACCESS_TOKENAAPTazd5GA-tN5wLSQufBCgPMUg..fqn88jIBxXHWkErzBslNFpNOi2sKDJsiPaz3OfDrZCrAgWtT44mHv9ZaP5VVGqSP0Pty3_-_SaUSCZrcTwLtG9B0h4nYt9eBbyEJNCZCwLy2E9RptcKQtzFbgFk7VFiqqvZvDZMBjxOMwapKmervyGV5l9pe0Noh3clnyF4iXDRAlqIMtIGaUx47eX-8cwIoOn4AVZeE_Zz22jAe06p57MqgAdwcLhvJYkxRibkc51yLFQrkqhWTaRttPuCH-0O2TCiqDQ..AT1_n54nPcAP" };
   </script>
 
   <!-- Load the ArcGIS Maps SDK for JavaScript from CDN -->
@@ -24,7 +35,7 @@
 
 <body>
 
-  <arcgis-map basemap= "satellite" center = "-84.67554701694672, 44.749945182717525" zoom= "6"> 
+  <arcgis-map basemap="arcgis/topographic" center="-118.805, 34.020" zoom="13">
     <arcgis-zoom slot="top-left"></arcgis-zoom>
   </arcgis-map>
 
@@ -34,10 +45,23 @@
     const viewElement = document.querySelector("arcgis-map");
     await viewElement.viewOnReady();
 
+    // Trailheads feature layer (points)
+    const trailheadsLayer = new FeatureLayer({
+      url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
+    });
+
+    viewElement.map.add(trailheadsLayer);
+
+    // Trails feature layer (lines)
+    const trailsLayer = new FeatureLayer({
+      url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+    });
+
+    viewElement.map.add(trailsLayer, 0);
 
     // Parks and open spaces (polygons)
     const parksLayer = new FeatureLayer({
-      url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_Parks_Unit_Boundary/FeatureServer",
+      url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0",
     });
 
     viewElement.map.add(parksLayer, 0);
