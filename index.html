@@ -116,6 +116,21 @@
             const viewElement = document.querySelector("arcgis-map");
             await viewElement.viewOnReady();
 
+            const fishHexbinLayer= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
+                title: "Mean PFOS Fish Contaminant Sample within 10 mile Hexbin "
+
+            }); 
+
+            viewElement.map.add (fishHexbinLayer, 2)
+
+            const fishPFOSLayer= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
+                title: "Fish Contaminant Monitoring Program PFOS Sample Site"
+            }); 
+
+            viewElement.map.add (fishPFOSLayer, 1)
+
             // renderer for Park Boundary
             // const parkRenderer = {
             //     type: "simple",  // autocasts as new SimpleRenderer()
