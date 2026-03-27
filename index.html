@@ -131,6 +131,13 @@
 
             viewElement.map.add (fishPFOSLayer, 1)
 
+            const waterSampleLayer= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
+                title: "PFAS Surface Water Sampling Site"
+            }); 
+
+            viewElement.map.add (waterSampleLayer, 3)
+
             // renderer for Park Boundary
             // const parkRenderer = {
             //     type: "simple",  // autocasts as new SimpleRenderer()
