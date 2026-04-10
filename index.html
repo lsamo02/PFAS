@@ -56,7 +56,7 @@
 
 
 
-        <arcgis-map basemap= "topo" center = "-84.67554701694672, 44.749945182717525" zoom= "6"> 
+        <arcgis-map basemap= "topo" center = "-84.67554701694672, 44.749945182717525" zoom= "7"> 
         
             <arcgis-expand slot="top-left" expand-icon="information" autoCollapse= true mode=" floating" collapse-tooltip>
                 <div id="information">
@@ -90,17 +90,17 @@
                 <div id= "information">
                     <b>Surface Water Sample PFAS Analyte</b> <br />
                     <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
-                    <calcite-radio-button-group id="colorMixMode" name="Options" layout="vertical" scale="m">
+                    <calcite-radio-button-group id="AnalyteChoice" name="Options" layout="vertical" scale="m">
                     <calcite-label layout="inline">
-                        <calcite-radio-button id="original" checked></calcite-radio-button>
+                        <calcite-radio-button id="pfhxa" checked></calcite-radio-button>
                         PFHxA
                     </calcite-label>
                     <calcite-label layout="inline">
-                        <calcite-radio-button id="select"></calcite-radio-button>
+                        <calcite-radio-button id="pfoa"></calcite-radio-button>
                         PFOA
                     </calcite-label>
                     <calcite-label layout="inline">
-                        <calcite-radio-button id="emphasize"></calcite-radio-button>
+                        <calcite-radio-button id="pfhxs"></calcite-radio-button>
                         PFHxS
                     </calcite-label>
                     <calcite-label layout="inline">
@@ -137,7 +137,7 @@
     <body>
         <script type="module">
 
-            const[FeatureLayer, PictureMarkerSymbol, Map, GraphicsLayer, query, Query, MapView]= 
+            const[FeatureLayer, PictureMarkerSymbol, Map, GraphicsLayer, query, Query, MapView, UniqueValueRenderer]= 
                 await $arcgis.import([
                     "@arcgis/core/layers/FeatureLayer.js",
                     "@arcgis/core/symbols/PictureMarkerSymbol.js", 
@@ -145,66 +145,96 @@
                     "@arcgis/core/layers/GraphicsLayer.js",
                     "@arcgis/core/rest/query.js",
                     "@arcgis/core/rest/support/Query.js",
-                    "@arcgis/core/views/MapView.js"
+                    "@arcgis/core/views/MapView.js", 
+                    "@arcgis/core/renderers/UniqueValueRenderer.js",
             ]);
 
             const viewElement = document.querySelector("arcgis-map");
             await viewElement.viewOnReady();
 
+
+            const init = {type: "simple-fill",}
+            const colors = ["#D35400", "#AED6F1", "grey"]
+
+            // renderer for pfhxa
+            const renderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "PFOS_Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
+
+            };
+
+
             const waterHexbinLayer= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
-                title: "Mean PFAS Analyte Concentration in Surface Water Sample within 10 mile Hexbin "
+                title: "Mean PFAS Analyte Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer,
+        
 
             }); 
 
-            layer.renderer= null; 
-            viewElement.map.add (waterHexbinLayer, 2)
+            viewElement.map.add (waterHexbinLayer)
 
-            const fishHexbinLayer= new FeatureLayer({
-                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
-                title: "Mean PFOS Concentration in Fish Contaminant Sample within 10 mile Hexbin "
+            
+            // const fishHexbinLayer= new FeatureLayer({
+            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
+            //     title: "Mean PFOS Concentration in Fish Contaminant Sample within 10 mile Hexbin "
 
-            }); 
+            // }); 
 
-            viewElement.map.add (fishHexbinLayer, 2)
+            // viewElement.map.add (fishHexbinLayer, 2)
 
-            const fishPFOSLayer= new FeatureLayer({
-                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
-                title: "Fish Contaminant Monitoring Program PFOS Sample Site"
-            }); 
+            // const fishPFOSLayer= new FeatureLayer({
+            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
+            //     title: "Fish Contaminant Monitoring Program PFOS Sample Site"
+            // }); 
 
-            viewElement.map.add (fishPFOSLayer, 1)
+            // viewElement.map.add (fishPFOSLayer, 1)
 
-            const waterSampleLayer= new FeatureLayer({
-                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025/FeatureServer",
-                title: "PFAS Surface Water Sampling Site"
-            }); 
+            // const waterSampleLayer= new FeatureLayer({
+            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025/FeatureServer",
+            //     title: "PFAS Surface Water Sampling Site"
+            // }); 
 
-            viewElement.map.add (waterSampleLayer, 3)
+            // viewElement.map.add (waterSampleLayer, 3)
 
-            // renderer for Park Boundary
+            // // renderer for Park Boundary
             // const parkRenderer = {
             //     type: "simple",  // autocasts as new SimpleRenderer()
             //     symbol: {
             //         type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
-            //         color: "purple",
+            //         color: "#D4EFDF", 
+            //         opacity: 0.5,
             //         outline: {  
-            //         width: 3,
-            //         color: "black"
+            //         width: 2,
+            //         color: "#229954"
             //         }
             //     }
             // };
 
-            // Create park boundary layer from feature service 
-            const parkLayer = new FeatureLayer({ 
-                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_Parks_Unit_Boundary/FeatureServer", //URL to Park layer
-                // renderer: parkRenderer,
-                // title: "Park Boundaries"
+            // // Create park boundary layer from feature service 
+            // const parkLayer = new FeatureLayer({ 
+            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_Parks_Unit_Boundary/FeatureServer", //URL to Park layer
+            //     renderer: parkRenderer,
+            //     title: "DNR Park Unit"
                
-            });
+            // });
             
-            //adds park layer to map
-            viewElement.map.add(parkLayer, 0);
+            // //adds park layer to map
+            // viewElement.map.add(parkLayer, 0);
 
             
 
