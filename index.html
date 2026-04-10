@@ -88,7 +88,8 @@
                 mode="floating"
             >
                 <div id= "information">
-                    <b>Information</b> <br />
+                    <b>Surface Water Sample PFAS Analyte</b> <br />
+                    <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
                     <calcite-radio-button-group id="colorMixMode" name="Options" layout="vertical" scale="m">
                     <calcite-label layout="inline">
                         <calcite-radio-button id="original" checked></calcite-radio-button>
@@ -156,6 +157,7 @@
 
             }); 
 
+            layer.renderer= null; 
             viewElement.map.add (waterHexbinLayer, 2)
 
             const fishHexbinLayer= new FeatureLayer({
