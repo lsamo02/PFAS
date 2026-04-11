@@ -177,6 +177,8 @@
 
             };
 
+            
+
 
             const waterHexbinLayer= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
@@ -189,52 +191,55 @@
             viewElement.map.add (waterHexbinLayer)
 
             
-            // const fishHexbinLayer= new FeatureLayer({
-            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
-            //     title: "Mean PFOS Concentration in Fish Contaminant Sample within 10 mile Hexbin "
+            const fishHexbinLayer= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
+                title: "Mean PFOS Concentration in Fish Contaminant Sample within 10 mile Hexbin ", 
+                visible: false
 
-            // }); 
+            }); 
 
-            // viewElement.map.add (fishHexbinLayer, 2)
+            viewElement.map.add (fishHexbinLayer, 2)
 
-            // const fishPFOSLayer= new FeatureLayer({
-            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
-            //     title: "Fish Contaminant Monitoring Program PFOS Sample Site"
-            // }); 
+            const fishPFOSLayer= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
+                title: "Fish Contaminant Monitoring Program PFOS Sample Site", 
+                visible: false
+            }); 
 
-            // viewElement.map.add (fishPFOSLayer, 1)
+            viewElement.map.add (fishPFOSLayer, 1)
 
-            // const waterSampleLayer= new FeatureLayer({
-            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025/FeatureServer",
-            //     title: "PFAS Surface Water Sampling Site"
-            // }); 
+            const waterSampleLayer= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025/FeatureServer",
+                title: "PFAS Surface Water Sampling Site", 
+                visible: false
+            }); 
 
-            // viewElement.map.add (waterSampleLayer, 3)
+            viewElement.map.add (waterSampleLayer, 3)
 
-            // // renderer for Park Boundary
-            // const parkRenderer = {
-            //     type: "simple",  // autocasts as new SimpleRenderer()
-            //     symbol: {
-            //         type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
-            //         color: "#D4EFDF", 
-            //         opacity: 0.5,
-            //         outline: {  
-            //         width: 2,
-            //         color: "#229954"
-            //         }
-            //     }
-            // };
+            // renderer for Park Boundary
+            const parkRenderer = {
+                type: "simple",  // autocasts as new SimpleRenderer()
+                symbol: {
+                    type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
+                    color: "#D4EFDF", 
+                    opacity: 0.5,
+                    outline: {  
+                    width: 2,
+                    color: "#229954"
+                    }
+                }
+            };
 
-            // // Create park boundary layer from feature service 
-            // const parkLayer = new FeatureLayer({ 
-            //     url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_Parks_Unit_Boundary/FeatureServer", //URL to Park layer
-            //     renderer: parkRenderer,
-            //     title: "DNR Park Unit"
+            // Create park boundary layer from feature service 
+            const parkLayer = new FeatureLayer({ 
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_Parks_Unit_Boundary/FeatureServer", //URL to Park layer
+                renderer: parkRenderer,
+                title: "DNR Park Unit"
                
-            // });
+            });
             
-            // //adds park layer to map
-            // viewElement.map.add(parkLayer, 0);
+            //adds park layer to map
+            viewElement.map.add(parkLayer, 0);
 
             
 
