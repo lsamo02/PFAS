@@ -58,7 +58,7 @@
 
         <arcgis-map basemap= "topo" center = "-84.67554701694672, 44.749945182717525" zoom= "7"> 
         
-            <arcgis-expand slot="top-left" expand-icon="information" autoCollapse= true mode=" floating" collapse-tooltip>
+            <arcgis-expand slot="top-left" expand-icon="information" auto-collapse mode=" floating" collapse-tooltip>
                 <div id="information">
                     <b>Information</b> <br />
                     <div id="description">PFAS Placeholder text</div>
@@ -69,16 +69,21 @@
             <arcgis-expand
                 slot="top-left"
                 mode="floating"
+                auto-collapse
             >
                 <arcgis-search
                 <!-- all-placeholder= "" -->
                 include-default-sources-disabled></arcgis-search>
             </arcgis-expand>
+
             <arcgis-zoom slot="top-left"></arcgis-zoom>
+
             <arcgis-locate slot= "top-left"></arcgis-locate>
+
             <arcgis-expand
                 slot="top-right" 
                 mode="floating"
+                auto-collapse
             >
                 <arcgis-legend></arcgis-legend>
             </arcgis-expand>
@@ -86,38 +91,47 @@
             <arcgis-expand
                 slot="bottom-right" 
                 mode="floating"
+                auto-collapse
             >
-                <div id= "information">
-                    <b>Surface Water Sample PFAS Analyte</b> <br />
+                <div id= "information">  
                     <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
-                      <input type="radio" id="layer1" name="layers" value="layer1">
-                        <label for="layer1">PFHxA</label>
+                    <b>Surface Water Sample PFAS Analyte</b> <br />
+                      <input type="radio" id="layer1" name="layers" value="layer1" checked>
+                        <label for="layer1">PFHxA</label><br/>
                         
                         <input type="radio" id="layer2" name="layers" value="layer2" >
-                        <label for="layer2">PFOA</label>
+                        <label for="layer2">PFOA</label><br/>
                         
                         <input type="radio" id="layer3" name="layers" value="layer3">
-                        <label for="layer3">PFHxS</label>
+                        <label for="layer3">PFHxS</label><br/>
 
                         <input type="radio" id="layer4" name="layers" value="layer4">
-                        <label for="layer4">PFBS</label>
+                        <label for="layer4">PFBS</label><br/>
 
                         <input type="radio" id="layer5" name="layers" value="layer5">
-                        <label for="layer5">PFNA</label>
+                        <label for="layer5">PFNA</label><br/>
 
                         <input type="radio" id="layer6" name="layers" value="layer6">
                         <label for="layer6">PFOS</label>
+
+                        <br/>
+
+                        <b>Fish Contaminant PFAS Analyte</b> <br />
+
+                        <input type="radio" id="layer7" name="layers" value="layer7">
+                        <label for="layer7">PFOS</label>
                 </div>
             </arcgis-expand>
 
             <arcgis-expand
                 slot= "top-right"
                 mode= "floating"
+                auto-collapse
             >
                 <arcgis-layer-list></arcgis-layer-list>
             </arcgis-expand>
 
-            <arcgis-expand slot="bottom-left">
+            <arcgis-expand slot="bottom-left" auto-collapse>
                 <arcgis-basemap-gallery></arcgis-basemap-gallery>
             </arcgis-expand>
 
@@ -270,7 +284,26 @@
                         value: "Below", 
                      },
                 ]
+            };
 
+            // renderer for pfos
+            const PFOSFishrenderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
             };
 
             
@@ -278,12 +311,12 @@
             const layer1= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
                 title: "Mean PFHxA Concentration in Surface Water Sample within 10 mile Hexbin ",
-                renderer: PFHXArenderer,
-                visible: false, 
-                
+                renderer: PFHXArenderer, 
             }); 
 
-            viewElement.map.add (layer1, 2)
+             
+            layer1.listMode= "hide";
+            viewElement.map.add (layer1)
 
             const layer2= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
@@ -293,7 +326,8 @@
                 
             }); 
 
-            viewElement.map.add (layer2, 2)
+            layer2.listMode= "hide";
+            viewElement.map.add (layer2)
 
             const layer3= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
@@ -303,7 +337,8 @@
             
             }); 
 
-            viewElement.map.add (layer3, 2)
+            layer3.listMode= "hide";
+            viewElement.map.add (layer3)
 
             const layer4= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
@@ -313,7 +348,8 @@
 
             }); 
 
-            viewElement.map.add (layer4, 2)
+            layer4.listMode= "hide";
+            viewElement.map.add (layer4)
 
             const layer5= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
@@ -323,7 +359,8 @@
 
             }); 
 
-            viewElement.map.add (layer5, 2)
+            layer5.listMode= "hide";
+            viewElement.map.add (layer5)
 
             const layer6= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
@@ -333,7 +370,18 @@
 
             }); 
 
-            viewElement.map.add (layer6, 2)
+            layer6.listMode= "hide";
+            viewElement.map.add (layer6)
+
+            const layer7= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
+                title: "Mean PFOS Concentration in Fish Contaminant Sample within 10 mile Hexbin ", 
+                renderer: PFOSFishrenderer, 
+                visible: false, 
+            }); 
+
+            layer7.listMode= "hide";
+            viewElement.map.add (layer7, 2)
 
 
             document.querySelectorAll('input[name="layers"]').forEach((radio) => {
@@ -347,41 +395,43 @@
                     layer4.visible = false;
                     layer5.visible = false;
                     layer6.visible = false;
+                    layer7.visible = false;
 
                     // Hide all layers
-                    // layer1.listMode = hide;
-                    // layer2.listMode = hide;
-                    // layer3.listMode = hide;
-                    // layer4.listMode = hide;
-                    // layer5.listMode = hide;
-                    // layer6.listMode = hide;
+                    layer1.listMode= "hide";
+                    layer2.listMode= "hide";
+                    layer3.listMode= "hide";
+                    layer4.listMode= "hide";
+                    layer5.listMode= "hide";
+                    layer6.listMode= "hide";
+                    layer7.listMode= "hide";
 
                     // Show the selected layer
                     if (selectedLayer === 'layer1') {
                     layer1.visible = true;
+                    layer1.listMode= "show"; 
                     } else if (selectedLayer === 'layer2') {
                     layer2.visible = true;
+                    layer2.listMode= "show";
                     } else if (selectedLayer === 'layer3') {
                     layer3.visible = true;
+                    layer3.listMode= "show";
                     } else if (selectedLayer === 'layer4') {
                     layer4.visible = true;
+                    layer4.listMode= "show";
                     } else if (selectedLayer === 'layer5') {
                     layer5.visible = true;
+                    layer5.listMode= "show";
                     } else if (selectedLayer === 'layer6') {
                     layer6.visible = true;
+                    layer6.listMode= "show";
+                    } else if (selectedLayer === 'layer7') {
+                    layer7.visible = true;
+                    layer7.listMode= "show";
                     }
                 });
             });
 
-            
-            const fishHexbinLayer= new FeatureLayer({
-                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_FishSampling_2026_10miHexbin/FeatureServer", 
-                title: "Mean PFOS Concentration in Fish Contaminant Sample within 10 mile Hexbin ", 
-                visible: false
-
-            }); 
-
-            viewElement.map.add (fishHexbinLayer, 2)
 
             const fishPFOSLayer= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
