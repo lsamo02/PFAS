@@ -82,7 +82,28 @@
             >
                 <arcgis-legend></arcgis-legend>
             </arcgis-expand>
+
             
+            <!-- <arcgis-expand
+                slot="bottom-right" 
+                mode="floating"
+            >
+                <div id= "information">
+                    <b>Surface Water Sample PFAS Analyte</b> <br />
+                    <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
+                    <calcite-radio-button-group value= "symbologyOptions" layout="vertical" scale="m">
+                    <calcite-label layout="inline">
+                        <calcite-radio-button value= "pfos"></calcite-radio-button>
+                        PFOS
+                    </calcite-label>
+                    <calcite-label layout="inline">
+                        <calcite-radio-button value="pfoa"></calcite-radio-button>
+                        PFOA
+                    </calcite-label>
+                    </calcite-radio-button-group>
+                </div>
+            </arcgis-expand> -->
+
             <arcgis-expand
                 slot="bottom-right" 
                 mode="floating"
@@ -90,32 +111,23 @@
                 <div id= "information">
                     <b>Surface Water Sample PFAS Analyte</b> <br />
                     <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
-                    <calcite-radio-button-group id="AnalyteChoice" name="Options" layout="vertical" scale="m">
-                    <calcite-label layout="inline">
-                        <calcite-radio-button id="pfhxa" checked></calcite-radio-button>
-                        PFHxA
-                    </calcite-label>
-                    <calcite-label layout="inline">
-                        <calcite-radio-button id="pfoa"></calcite-radio-button>
-                        PFOA
-                    </calcite-label>
-                    <calcite-label layout="inline">
-                        <calcite-radio-button id="pfhxs"></calcite-radio-button>
-                        PFHxS
-                    </calcite-label>
-                    <calcite-label layout="inline">
-                        <calcite-radio-button id="replace"></calcite-radio-button>
-                        PFBS
-                    </calcite-label>
-                    <calcite-label layout="inline">
-                        <calcite-radio-button id="replace"></calcite-radio-button>
-                        PFNA
-                    </calcite-label>
-                    <calcite-label layout="inline">
-                        <calcite-radio-button id="replace"></calcite-radio-button>
-                        PFOA
-                    </calcite-label>
-                    </calcite-radio-button-group>
+                      <input type="radio" id="pfhxa" name="layers" value="pfhxa" checked>
+                        <label for="pfhxa">PFHxA</label>
+                        
+                        <input type="radio" id="pfoa" name="layers" value="pfoa" >
+                        <label for="pfoa">PFOA</label>
+                        
+                        <input type="radio" id="pfhxs" name="layers" value="pfhxs">
+                        <label for="pfhxs">PFHxS</label>
+
+                        <input type="radio" id="pfbs" name="layers" value="pfbs">
+                        <label for="pfbs">PFBS</label>
+
+                        <input type="radio" id="pfna" name="layers" value="pfna">
+                        <label for="pfna">PFNA</label>
+
+                        <input type="radio" id="pfos" name="layers" value="pfos">
+                        <label for="pfos">PFOS</label>
                 </div>
             </arcgis-expand>
 
@@ -157,7 +169,112 @@
             const colors = ["#D35400", "#AED6F1", "grey"]
 
             // renderer for pfhxa
-            const renderer = {
+            const PFHXArenderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "PFHxA_Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
+
+            };
+
+            // renderer for pfoa
+            const PFOArenderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "PFOA_Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
+
+            };
+
+            // renderer for pfhxs
+            const PFHXSrenderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "PFHxS_Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
+
+            };
+
+            // renderer for pfbs
+            const PFBSrenderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "PFBS_Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
+
+            };
+
+            // renderer for pfna
+            const PFNArenderer = {
+                type: "unique-value",  // autocasts as new unique value renderer
+                field: "PFNA_Above_Below_MCL", 
+                // defaultSymbol: {...init, color: colors[2]},
+
+                uniqueValueInfos:[
+                    { 
+                        label: "Above", 
+                        symbol: { ...init, color: colors[0], },
+                        value: "Above"  
+                    },
+                    { 
+                        label: "Below", 
+                        symbol: { ...init, color: colors[1] }, 
+                        value: "Below", 
+                     },
+                ]
+
+            };
+         
+            // renderer for pfos
+            const PFOSrenderer = {
                 type: "unique-value",  // autocasts as new unique value renderer
                 field: "PFOS_Above_Below_MCL", 
                 // defaultSymbol: {...init, color: colors[2]},
@@ -177,18 +294,64 @@
 
             };
 
-            
 
 
-            const waterHexbinLayer= new FeatureLayer({
+
+            const waterHexlayer= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
                 title: "Mean PFAS Analyte Concentration in Surface Water Sample within 10 mile Hexbin ",
-                renderer,
+                // renderer: renderer,
+                // visible: false
         
 
             }); 
 
-            viewElement.map.add (waterHexbinLayer)
+            viewElement.map.add (waterHexlayer, 3)
+
+
+    
+            // changing layers with radio buttons for if calcite buttons don't work 
+            const layer1= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
+                title: "Mean PFOS Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFOSrenderer,
+                visible: false
+        
+
+            }); 
+
+            viewElement.map.add (layer1, 2)
+
+            const layer2= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
+                title: "Mean PFOA Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFOArenderer,
+                visible: false
+        
+
+            }); 
+
+            viewElement.map.add (layer2, 2)
+
+            document.querySelectorAll('input[name="layers"]').forEach((radio) => {
+                radio.addEventListener('change', (event) => {
+                    const selectedLayer = event.target.value;
+
+                    // Hide all layers
+                    layer1.visible = false;
+                    layer2.visible = false;
+                    layer3.visible = false;
+
+                    // Show the selected layer
+                    if (selectedLayer === 'layer1') {
+                    layer1.visible = true;
+                    } else if (selectedLayer === 'layer2') {
+                    layer2.visible = true;
+                    } else if (selectedLayer === 'layer3') {
+                    layer3.visible = true;
+                    }
+                });
+            });
 
             
             const fishHexbinLayer= new FeatureLayer({
@@ -214,7 +377,7 @@
                 visible: false
             }); 
 
-            viewElement.map.add (waterSampleLayer, 3)
+            viewElement.map.add (waterSampleLayer, 1)
 
             // renderer for Park Boundary
             const parkRenderer = {
@@ -239,9 +402,7 @@
             });
             
             //adds park layer to map
-            viewElement.map.add(parkLayer, 0);
-
-            
+            viewElement.map.add(parkLayer, 0);  
 
         </script>
       
