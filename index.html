@@ -83,27 +83,6 @@
                 <arcgis-legend></arcgis-legend>
             </arcgis-expand>
 
-            
-            <!-- <arcgis-expand
-                slot="bottom-right" 
-                mode="floating"
-            >
-                <div id= "information">
-                    <b>Surface Water Sample PFAS Analyte</b> <br />
-                    <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
-                    <calcite-radio-button-group value= "symbologyOptions" layout="vertical" scale="m">
-                    <calcite-label layout="inline">
-                        <calcite-radio-button value= "pfos"></calcite-radio-button>
-                        PFOS
-                    </calcite-label>
-                    <calcite-label layout="inline">
-                        <calcite-radio-button value="pfoa"></calcite-radio-button>
-                        PFOA
-                    </calcite-label>
-                    </calcite-radio-button-group>
-                </div>
-            </arcgis-expand> -->
-
             <arcgis-expand
                 slot="bottom-right" 
                 mode="floating"
@@ -111,23 +90,23 @@
                 <div id= "information">
                     <b>Surface Water Sample PFAS Analyte</b> <br />
                     <div id="description">Select a PFAS Analyte to see whether it is above or below MI's Maximum Contaminant Level (MCL)  </div><br />
-                      <input type="radio" id="pfhxa" name="layers" value="pfhxa" checked>
-                        <label for="pfhxa">PFHxA</label>
+                      <input type="radio" id="layer1" name="layers" value="layer1">
+                        <label for="layer1">PFHxA</label>
                         
-                        <input type="radio" id="pfoa" name="layers" value="pfoa" >
-                        <label for="pfoa">PFOA</label>
+                        <input type="radio" id="layer2" name="layers" value="layer2" >
+                        <label for="layer2">PFOA</label>
                         
-                        <input type="radio" id="pfhxs" name="layers" value="pfhxs">
-                        <label for="pfhxs">PFHxS</label>
+                        <input type="radio" id="layer3" name="layers" value="layer3">
+                        <label for="layer3">PFHxS</label>
 
-                        <input type="radio" id="pfbs" name="layers" value="pfbs">
-                        <label for="pfbs">PFBS</label>
+                        <input type="radio" id="layer4" name="layers" value="layer4">
+                        <label for="layer4">PFBS</label>
 
-                        <input type="radio" id="pfna" name="layers" value="pfna">
-                        <label for="pfna">PFNA</label>
+                        <input type="radio" id="layer5" name="layers" value="layer5">
+                        <label for="layer5">PFNA</label>
 
-                        <input type="radio" id="pfos" name="layers" value="pfos">
-                        <label for="pfos">PFOS</label>
+                        <input type="radio" id="layer6" name="layers" value="layer6">
+                        <label for="layer6">PFOS</label>
                 </div>
             </arcgis-expand>
 
@@ -294,30 +273,14 @@
 
             };
 
-
-
-
-            const waterHexlayer= new FeatureLayer({
-                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
-                title: "Mean PFAS Analyte Concentration in Surface Water Sample within 10 mile Hexbin ",
-                // renderer: renderer,
-                // visible: false
-        
-
-            }); 
-
-            viewElement.map.add (waterHexlayer, 3)
-
-
-    
-            // changing layers with radio buttons for if calcite buttons don't work 
+            
+            // changing layers with radio buttons
             const layer1= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
-                title: "Mean PFOS Concentration in Surface Water Sample within 10 mile Hexbin ",
-                renderer: PFOSrenderer,
-                visible: false
-        
-
+                title: "Mean PFHxA Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFHXArenderer,
+                visible: false, 
+                
             }); 
 
             viewElement.map.add (layer1, 2)
@@ -326,12 +289,52 @@
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
                 title: "Mean PFOA Concentration in Surface Water Sample within 10 mile Hexbin ",
                 renderer: PFOArenderer,
-                visible: false
-        
-
+                visible: false, 
+                
             }); 
 
             viewElement.map.add (layer2, 2)
+
+            const layer3= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
+                title: "Mean PFHxS Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFHXSrenderer,
+                visible: false,
+            
+            }); 
+
+            viewElement.map.add (layer3, 2)
+
+            const layer4= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
+                title: "Mean PFBS Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFBSrenderer,
+                visible: false, 
+
+            }); 
+
+            viewElement.map.add (layer4, 2)
+
+            const layer5= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
+                title: "Mean PFNA Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFNArenderer,
+                visible: false, 
+
+            }); 
+
+            viewElement.map.add (layer5, 2)
+
+            const layer6= new FeatureLayer({
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
+                title: "Mean PFOS Concentration in Surface Water Sample within 10 mile Hexbin ",
+                renderer: PFOSrenderer,
+                visible: false, 
+
+            }); 
+
+            viewElement.map.add (layer6, 2)
+
 
             document.querySelectorAll('input[name="layers"]').forEach((radio) => {
                 radio.addEventListener('change', (event) => {
@@ -341,6 +344,17 @@
                     layer1.visible = false;
                     layer2.visible = false;
                     layer3.visible = false;
+                    layer4.visible = false;
+                    layer5.visible = false;
+                    layer6.visible = false;
+
+                    // Hide all layers
+                    // layer1.listMode = hide;
+                    // layer2.listMode = hide;
+                    // layer3.listMode = hide;
+                    // layer4.listMode = hide;
+                    // layer5.listMode = hide;
+                    // layer6.listMode = hide;
 
                     // Show the selected layer
                     if (selectedLayer === 'layer1') {
@@ -349,6 +363,12 @@
                     layer2.visible = true;
                     } else if (selectedLayer === 'layer3') {
                     layer3.visible = true;
+                    } else if (selectedLayer === 'layer4') {
+                    layer4.visible = true;
+                    } else if (selectedLayer === 'layer5') {
+                    layer5.visible = true;
+                    } else if (selectedLayer === 'layer6') {
+                    layer6.visible = true;
                     }
                 });
             });
