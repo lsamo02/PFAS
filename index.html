@@ -157,9 +157,8 @@
             const viewElement = document.querySelector("arcgis-map");
             await viewElement.viewOnReady();
 
-
             const init = {type: "simple-fill",}
-            const colors = ["#D35400", "#AED6F1", "grey"]
+            const colors = ["rgba(211, 84, 0, 0.60)", "rgba(174, 214, 241, 0.70)" ]
 
             // renderer for pfhxa
             const PFHXArenderer = {
@@ -171,11 +170,11 @@
                     { 
                         label: "Above", 
                         symbol: { ...init, color: colors[0], },
-                        value: "Above"  
+                        value: "Above",  
                     },
                     { 
                         label: "Below", 
-                        symbol: { ...init, color: colors[1] }, 
+                        symbol: { ...init, color: colors[1], opacity: 0.05 }, 
                         value: "Below", 
                      },
                 ]
@@ -312,6 +311,7 @@
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025_10miHexbin/FeatureServer", 
                 title: "Mean PFHxA Concentration in Surface Water Sample within 10 mile Hexbin ",
                 renderer: PFHXArenderer, 
+                visible:false,
             }); 
 
              
@@ -454,10 +454,9 @@
                 type: "simple",  // autocasts as new SimpleRenderer()
                 symbol: {
                     type: "simple-fill",  // autocasts as new SimpleMarkerSymbol()
-                    color: "#D4EFDF", 
-                    opacity: 0.5,
+                    color: "rgba(212, 239, 223, 0.70)", 
                     outline: {  
-                    width: 2,
+                    width: 1,
                     color: "#229954"
                     }
                 }
@@ -470,9 +469,69 @@
                 title: "DNR Park Unit"
                
             });
-            
+
             //adds park layer to map
-            viewElement.map.add(parkLayer, 0);  
+            viewElement.map.add(parkLayer, 0);
+
+                        // const sizeVV = {
+            //     type: "size",
+
+            //     valueExpression: "$view.scale",
+
+            //     stops: [
+            //     { size: 9, value: 1155581 },
+            //     { size: 6, value: 9244648 },
+            //     { size: 3, value: 73957190 },
+            //     { size: 1.5, value: 591657527 },
+            //     ],
+            // };
+
+
+            const pointRenderer = new SimpleRenderer({
+                symbol: {
+                    type: "simple-marker",
+                    color: "blue",
+                    outline: {
+                        color: [255, 255, 255, 0.7],
+                        width: 0.5,
+                    },
+                    size: "3px",
+                },
+
+                // visualVariables: [sizeVV],
+
+            });
+
+            
+  
+            const aoiPFAS= new FeatureLayer({
+                url: "https://services1.arcgis.com/FNjlrOFR0aGJ71Tg/arcgis/rest/services/Michigan_PFAS_Sites_and_Areas_of_Interest_PUBLIC_view/FeatureServer/1", 
+                title: "PFAS Emitting Sites and Areas of Interest", 
+                renderer: pointRenderer, 
+
+            })
+
+            viewElement.map.add(aoiPFAS, 1)
+
+
+
+            // const boatLaunchLayer= new FeatureLayer({
+            //     url: "https://services3.arcgis.com/Jdnp1TjADvSDxMAX/arcgis/rest/services/PRDBASPublicView/FeatureServer", 
+            //     title: "Boating Access Sites", 
+            //     // renderer: pointRenderer,
+
+            // })
+
+            // viewElement.map.add(boatLaunchLayer, 1)
+
+            // const troutTrailsLayer= new FeatureLayer({
+            //     url: "https://services3.arcgis.com/Jdnp1TjADvSDxMAX/arcgis/rest/services/TroutTrailPointsOpenData/FeatureServer/0", 
+            //     title: "DNR Trout Trails", 
+            //     renderer: pointRenderer,
+
+            // })
+
+            // viewElement.map.add(troutTrailsLayer, 1)
 
         </script>
       
