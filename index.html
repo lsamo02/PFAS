@@ -549,7 +549,14 @@
             const aoiPFAS= new FeatureLayer({
                 url: "https://services1.arcgis.com/FNjlrOFR0aGJ71Tg/arcgis/rest/services/Michigan_PFAS_Sites_and_Areas_of_Interest_PUBLIC_view/FeatureServer/1", 
                 title: "PFAS Emitting Sites and Areas of Interest", 
-                renderer: aoiRenderer
+                renderer: aoiRenderer,
+                visible: false, 
+                popupTemplate:{
+                    title:"PFAS Emitting {SiteOrAoi}",  
+                    content: "<b>Name: </b> {Name}" + "<br><b>City: </b> {City}"+ "<br><b>County: </b> {County}",
+                    overwriteActions: true
+                }, 
+                
 
             })
 
@@ -570,7 +577,7 @@
                 symbol: {
                     type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
                     size: 5,
-                    color: "#229954",
+                    color: "#1A5276",
                     outline: {  // autocasts as new SimpleLineSymbol()
                     width: 0.5,
                     color: "white"
