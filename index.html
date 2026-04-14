@@ -158,6 +158,18 @@
             const viewElement = document.querySelector("arcgis-map");
             await viewElement.viewOnReady();
 
+            document.querySelector("arcgis-layer-list").listItemCreatedFunction = (event) => {
+                const { item } = event;
+
+                // Exclude group layers, otherwise the legend will be displayed twice
+                if (item.layer.type != "group") {
+                item.panel = {
+                    content: "legend",
+                    open: true,
+                };
+                }
+            };
+
             const init = {type: "simple-fill",}
             const colors = ["rgba(211, 84, 0, 0.60)", "rgba(174, 214, 241, 0.70)" ]
 
@@ -463,11 +475,34 @@
                 }
             };
 
+            // Define a label for the park units
+            const parkLabels = {
+                symbol: {
+                type: "text",
+                color: "rgba(212, 239, 223)",
+                haloColor: "#5E8D74",
+                haloSize: "2px",
+                font: {
+                    size: "12px",
+                    family: "Noto Sans",
+                    style: "italic",
+                    weight: "normal",
+                },
+                },
+
+                labelPlacement: "above-center",
+                labelExpressionInfo: {
+                expression: "$feature.Facility",
+                },
+                minScale: 200000,
+            };
+
             // Create park boundary layer from feature service 
             const parkLayer = new FeatureLayer({ 
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/DNR_Parks_Unit_Boundary/FeatureServer", //URL to Park layer
                 renderer: parkRenderer,
-                title: "DNR Park Unit"
+                title: "DNR Park Unit", 
+                labelingInfo: [parkLabels],
                
             });
 
