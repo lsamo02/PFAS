@@ -449,7 +449,12 @@
             const fishPFOSLayer= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFOS_FishSampling_2026/FeatureServer",
                 title: "Fish Contaminant Monitoring Program PFOS Sample Site", 
-                visible: false
+                visible: false, 
+                popupTemplate:{
+                    title:"{WaterBody}",  
+                    content: "<b>Species Tested: </b> {Species}" + "<br><b>PFOS Concentration in ppt: </b> {PFOSppt}",
+                    overwriteActions: true
+                }, 
             }); 
 
             viewElement.map.add (fishPFOSLayer, 1)
@@ -457,7 +462,18 @@
             const waterSampleLayer= new FeatureLayer({
                 url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/PFAS_SurfaceWater_2025/FeatureServer",
                 title: "PFAS Surface Water Sampling Site", 
-                visible: false
+                visible: false, 
+                popupTemplate:{
+                    title:"{Waterbody}",  
+                    content: "<b>PFHxA Concentration in ppt: </b> {CAS307244_PFHxA}" + 
+                    "<br><b>PFOA Concentration in ppt: </b> {CAS335671_PFOA}"+
+                    "<br><b>PFHxS Concentration in ppt: </b> {CAS355464_PFHxS}"+
+                    "<br><b>PFBS Concentration in ppt: </b> {CAS375735_PFBS}"+
+                    "<br><b>PFNA Concentration in ppt: </b> {CAS375951_PFNA}"+
+                    "<br><b>PFOS Concentration in ppt: </b> {CAS1763231_PFOS}",
+                    overwriteActions: true
+                }, 
+                
             }); 
 
             viewElement.map.add (waterSampleLayer, 1)
@@ -562,10 +578,32 @@
 
             viewElement.map.add(aoiPFAS, 1)
 
+            const boatLabels = {
+                symbol: {
+                type: "text",
+                color: "#1A5276",
+                // haloColor: "#5E8D74",
+                // haloSize: "2px",
+                font: {
+                    size: "12px",
+                    family: "Noto Sans",
+                    style: "italic",
+                    weight: "normal",
+                },
+                },
+
+                labelPlacement: "above-center",
+                labelExpressionInfo: {
+                expression: "$feature.name",
+                },
+                minScale: 200000,
+            };
+
 
             const boatLaunchLayer= new FeatureLayer({
                 url: "https://services3.arcgis.com/Jdnp1TjADvSDxMAX/arcgis/rest/services/PRDBASPublicView/FeatureServer", 
                 title: "Boating Access Sites", 
+                labelingInfo: [boatLabels],
                 visible: false
 
             })
@@ -585,12 +623,35 @@
                 }
                 };
 
+            // Define a label for the park units
+            const troutLabels = {
+                symbol: {
+                type: "text",
+                color: "#1A5276",
+                // haloColor: "#5E8D74",
+                // haloSize: "2px",
+                font: {
+                    size: "12px",
+                    family: "Noto Sans",
+                    style: "italic",
+                    weight: "normal",
+                },
+                },
+
+                labelPlacement: "above-center",
+                labelExpressionInfo: {
+                expression: "$feature.locationname",
+                },
+                minScale: 200000,
+            };
+
             const troutTrailsLayer= new FeatureLayer({
                 url: "https://services3.arcgis.com/Jdnp1TjADvSDxMAX/arcgis/rest/services/TroutTrailPointsOpenData/FeatureServer/0", 
                 title: "DNR Trout Trails", 
                 renderer: troutRenderer, 
-                visibile: false
-
+                labelingInfo: [troutLabels],
+                visible: false
+                
             })
 
             viewElement.map.add(troutTrailsLayer, 1)
