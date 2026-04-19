@@ -61,7 +61,8 @@
             <arcgis-expand slot="top-left" expand-icon="information" auto-collapse mode=" floating" collapse-tooltip>
                 <div id="information">
                     <b>Information</b> <br />
-                    <div id="description">PFAS Placeholder text</div>
+                    <div id="description">PFAS, aka "Forever" Chemicals" are monitored by state agencies at sample sites throughout the Michigan. Use this map
+                        to determine whether popular water recreation sites are within 10 mi hexbins where PFAS contaminants are above or below Michigan's Maximum Contaminant Levels.   </div>
                     <div id="outer-container">
                     </div>
                 </div>
@@ -80,13 +81,13 @@
 
             <arcgis-locate slot= "top-left"></arcgis-locate>
 
-            <arcgis-expand
+            <!-- <arcgis-expand
                 slot="top-right" 
                 mode="floating"
                 auto-collapse
             >
                 <arcgis-legend></arcgis-legend>
-            </arcgis-expand>
+            </arcgis-expand> -->
 
             <arcgis-expand
                 slot="bottom-right" 
@@ -154,10 +155,12 @@
                     "@arcgis/core/renderers/UniqueValueRenderer.js",
                     
             ]);
+            
 
             const viewElement = document.querySelector("arcgis-map");
             await viewElement.viewOnReady();
 
+                // adds legend to layer list 
             document.querySelector("arcgis-layer-list").listItemCreatedFunction = (event) => {
                 const { item } = event;
 
@@ -655,6 +658,8 @@
             })
 
             viewElement.map.add(troutTrailsLayer, 1)
+
+
 
         </script>
       
